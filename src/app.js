@@ -1,8 +1,9 @@
 import express from 'express'
 
 import './config/env.js'
-
-import connectDB from './config/db.js'
+/* 
+import connectDB from './config/db.js' */
+import  connectDB  from './config/db.js'
 
 import userRoutes from './routes/user.routes.js'
 

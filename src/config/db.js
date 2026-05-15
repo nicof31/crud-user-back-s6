@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import { env } from './env.js'
 
 
-const connectDB = async () => {
+ const connectDB = async () => {
 
   try {
 
@@ -22,3 +22,4 @@ const connectDB = async () => {
   }
 
 }
+export default connectDB
