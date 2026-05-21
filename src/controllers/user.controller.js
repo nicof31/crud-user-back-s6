@@ -1,5 +1,13 @@
 import {
 
+  createUserSchema,
+
+  updateUserSchema
+
+} from '../dto/user.dto.js'
+
+import {
+
   getUsersService,
 
   createUserService,
@@ -36,9 +44,20 @@ const createUser = async (req, res) => {
 
     console.log('🎮 CONTROLLER → createUser')
 
+    // VALIDAR DTO
+    const { error } = createUserSchema.validate(req.body)
+
+    if (error) {
+
+      return res.status(400).json({
+        error: error.details[0].message
+      })
+
+    }
+
     const user = await createUserService(req.body)
 
-    res.json(user)
+    res.status(201).json(user)
 
   } catch (error) {
 
@@ -55,6 +74,17 @@ const updateUser = async (req, res) => {
   try {
 
     console.log('🎮 CONTROLLER → updateUser')
+
+    // VALIDAR DTO
+    const { error } = updateUserSchema.validate(req.body)
+
+    if (error) {
+
+      return res.status(400).json({
+        error: error.details[0].message
+      })
+
+    }
 
     const user = await updateUserService(
       req.params.id,
