@@ -22,7 +22,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-
+  fechaNacimiento: {
+    type: Date,
+    required: true
+  },
   edad: {
     type: Number,
     required: true
@@ -39,6 +42,23 @@ const userSchema = new mongoose.Schema({
   },
 
   direccion: {
+    type: String,
+    required: true
+  },
+
+  localidad: {
+    type: String,
+    required: true
+  },
+  provincia: {
+    type: String,
+    required: true
+  },
+  pais: {
+    type: String,
+    required: true
+  },
+  codigoPostal: {
     type: String,
     required: true
   }

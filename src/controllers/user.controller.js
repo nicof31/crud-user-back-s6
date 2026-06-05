@@ -1,136 +1,107 @@
 import {
-
   createUserSchema,
-
-  updateUserSchema
-
-} from '../dto/user.dto.js'
+  updateUserSchema,
+  userParamsSchema,
+} from "../dto/user.dto.js";
 
 import {
-
   getUsersService,
-
   createUserService,
-
   updateUserService,
-
-  deleteUserService
-
-} from '../services/user.service.js'
+  deleteUserService,
+} from "../services/user.service.js";
 
 const getUsers = async (req, res) => {
-
   try {
+    console.log("🎮 CONTROLLER → getUsers");
 
-    console.log('🎮 CONTROLLER → getUsers')
+    const users = await getUsersService();
 
-    const users = await getUsersService()
-
-    res.json(users)
-
+    res.json(users);
   } catch (error) {
-
     res.status(500).json({
-      error: error.message
-    })
-
+      error: error.message,
+    });
   }
-
-}
+};
 
 const createUser = async (req, res) => {
-
   try {
-
-    console.log('🎮 CONTROLLER → createUser')
+    console.log("🎮 CONTROLLER → createUser");
 
     // VALIDAR DTO
-    const { error } = createUserSchema.validate(req.body)
+    const { error } = createUserSchema.validate(req.body);
 
     if (error) {
-
       return res.status(400).json({
-        error: error.details[0].message
-      })
-
+        error: error.details[0].message,
+      });
     }
 
-    const user = await createUserService(req.body)
+    const user = await createUserService(req.body);
 
-    res.status(201).json(user)
-
+    res.status(201).json(user);
   } catch (error) {
-
     res.status(500).json({
-      error: error.message
-    })
-
+      error: error.message,
+    });
   }
-
-}
+};
 
 const updateUser = async (req, res) => {
-
   try {
-
-    console.log('🎮 CONTROLLER → updateUser')
+    console.log("🎮 CONTROLLER → updateUser");
 
     // VALIDAR DTO
-    const { error } = updateUserSchema.validate(req.body)
+
+    const { error: paramsError } = userParamsSchema.validate(req.params);
+
+    if (paramsError) {
+      return res.status(400).json({
+        message: "Id inválido",
+        error: paramsError.details[0].message,
+      });
+    }
+    const { error } = updateUserSchema.validate(req.body);
 
     if (error) {
-
       return res.status(400).json({
-        error: error.details[0].message
-      })
-
+        error: error.details[0].message,
+      });
     }
 
-    const user = await updateUserService(
-      req.params.id,
-      req.body
-    )
+    const user = await updateUserService(req.params.id, req.body);
 
-    res.json(user)
-
+    res.json(user);
   } catch (error) {
-
     res.status(500).json({
-      error: error.message
-    })
-
+      error: error.message,
+    });
   }
-
-}
+};
 
 const deleteUser = async (req, res) => {
-
   try {
+    console.log("🎮 CONTROLLER → deleteUser");
+    // VALIDAR DTO
 
-    console.log('🎮 CONTROLLER → deleteUser')
+    const { error: paramsError } = userParamsSchema.validate(req.params);
 
-    const result = await deleteUserService(req.params.id)
+    if (paramsError) {
+      return res.status(400).json({
+        message: "Id inválido",
+        error: paramsError.details[0].message,
+      });
+    }
 
-    res.json(result)
+    const result = await deleteUserService(req.params.id);
 
+    res.json(result);
   } catch (error) {
-
     res.status(500).json({
-      error: error.message
-    })
-
+      error: error.message,
+    });
   }
+};
 
-}
-
-export {
-
-  getUsers,
-
-  createUser,
-
-  updateUser,
-
-  deleteUser
-
-}
+export { getUsers, createUser, updateUser, deleteUser };
