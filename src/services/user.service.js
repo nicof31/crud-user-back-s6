@@ -69,18 +69,22 @@ const getUsersService = async ({ email, id }) => {
 };
 
 const createUserService = async (data) => {
+
   console.log("📦 SERVICE → createUserService");
 
   try {
+
     const existUser = await User.findOne({
       email: data.email,
     });
 
     if (existUser) {
+
       throw {
         statusCode: 409,
         message: "El usuario ya existe",
       };
+
     }
 
     const hashedPassword = await bcrypt.hash(
@@ -89,54 +93,94 @@ const createUserService = async (data) => {
     );
 
     const user = new User({
+
       nombre: data.nombre,
+
       apellido: data.apellido,
+
       email: data.email,
+
       password: hashedPassword,
+
       fechaNacimiento: data.fechaNacimiento,
+
       edad: data.edad,
+
       genero: data.genero,
+
       telefono: data.telefono,
+
       direccion: data.direccion,
+
       localidad: data.localidad,
+
       provincia: data.provincia,
+
       pais: data.pais,
+
       codigoPostal: data.codigoPostal,
+
+      role: data.role, // Si no viene, el schema asignará USER
+
     });
 
     await user.save();
 
     return {
+
       id: user._id,
+
       nombre: user.nombre,
+
       apellido: user.apellido,
+
       email: user.email,
+
       fechaNacimiento: user.fechaNacimiento,
+
       edad: user.edad,
+
       genero: user.genero,
+
       telefono: user.telefono,
+
       direccion: user.direccion,
+
       localidad: user.localidad,
+
       provincia: user.provincia,
+
       pais: user.pais,
+
       codigoPostal: user.codigoPostal,
+
+      role: user.role,
+
     };
+
   } catch (error) {
+
     console.error(
       "❌ Error en createUserService:",
       error
     );
 
     throw {
+
       statusCode:
         error.statusCode || 500,
+
       message:
         error.message ||
         "Error interno del servidor",
+
       errors:
         error.errors || null,
+
     };
+
   }
+
 };
 
 const updateUserService = async (id, data) => {
@@ -168,19 +212,32 @@ const updateUserService = async (id, data) => {
     }
 
     const allowedFields = [
-      "nombre",
-      "apellido",
-      "fechaNacimiento",
-      "edad",
-      "genero",
-      "telefono",
-      "direccion",
-      "localidad",
-      "provincia",
-      "pais",
-      "codigoPostal",
-    ];
 
+      "nombre",
+
+      "apellido",
+
+      "fechaNacimiento",
+
+      "edad",
+
+      "genero",
+
+      "telefono",
+
+      "direccion",
+
+      "localidad",
+
+      "provincia",
+
+      "pais",
+
+      "codigoPostal",
+
+      "role"
+
+    ];
     allowedFields.forEach((field) => {
       if (data[field] !== undefined) {
         user[field] = data[field];
@@ -211,6 +268,7 @@ const updateUserService = async (id, data) => {
       provincia: user.provincia,
       pais: user.pais,
       codigoPostal: user.codigoPostal,
+      role: user.role,
     };
   } catch (error) {
     console.error(

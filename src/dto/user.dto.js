@@ -1,5 +1,12 @@
 import Joi from "joi";
 
+const roles = [
+  "ROOT",
+  "ADMIN",
+  "USER",
+  "GUEST",
+];
+
 const createUserSchema = Joi.object({
   nombre: Joi.string()
     .trim()
@@ -72,6 +79,14 @@ const createUserSchema = Joi.object({
     .trim()
     .max(20)
     .required(),
+
+  role: Joi.string()
+    .valid(...roles)
+    .default("USER")
+    .messages({
+      "any.only":
+        `El rol debe ser uno de los siguientes: ${roles.join(", ")}`,
+    }),
 });
 
 const updateUserSchema = Joi.object({
@@ -135,12 +150,19 @@ const updateUserSchema = Joi.object({
   codigoPostal: Joi.string()
     .trim()
     .max(20),
+
+  role: Joi.string()
+    .valid(...roles)
+    .messages({
+      "any.only":
+        `El rol debe ser uno de los siguientes: ${roles.join(", ")}`,
+    }),
 })
-.min(1) // obliga a enviar al menos un campo
-.messages({
-  "object.min":
-    "Debe enviar al menos un campo para actualizar",
-});
+  .min(1)
+  .messages({
+    "object.min":
+      "Debe enviar al menos un campo para actualizar",
+  });
 
 const userParamsSchema = Joi.object({
   id: Joi.string()
@@ -150,8 +172,10 @@ const userParamsSchema = Joi.object({
     .messages({
       "string.hex":
         "El id debe ser un ObjectId válido",
+
       "string.length":
         "El id debe tener 24 caracteres",
+
       "any.required":
         "El id es obligatorio",
     }),

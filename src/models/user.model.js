@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    
+
     edad: {
       type: Number,
       required: true,
@@ -66,6 +66,17 @@ const userSchema = new mongoose.Schema(
     codigoPostal: {
       type: String,
       required: true,
+    },
+
+    role: {
+      type: String,
+      enum: ["ROOT", "ADMIN", "USER", "GUEST"],
+      default: "USER",
+    },
+    
+    ultimoLogin: {
+      type: Date,
+      default: null,
     },
   },
   {
